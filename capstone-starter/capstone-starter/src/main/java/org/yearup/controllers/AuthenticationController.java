@@ -62,7 +62,7 @@ public class AuthenticationController {
         }
         catch(Exception ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Try this Step again, Sorry!");
         }
     }
 
@@ -87,10 +87,11 @@ public class AuthenticationController {
             profileDao.create(profile);
 
             return new ResponseEntity<>(user, HttpStatus.CREATED);
+
         }
         catch (Exception e)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Not Registered! Please try again.");
         }
     }
 
