@@ -3,7 +3,6 @@ package org.yearup.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.CategoryDao;
@@ -56,7 +55,7 @@ public class CategoriesController
             var category = categoryDao.getById(id);
 
             if(category == null)
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.OK);
 
             return category;
         }
@@ -76,21 +75,18 @@ public class CategoriesController
     }
 
     // add annotation to call this method for a POST action
-    @PostMapping("")
-    // add annotation to ensure that only an ADMIN can call this function
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Category addCategory(@RequestBody Category category)
-    {
-        // insert the category
+    @ResponseStatus(HttpStatus.CREATED)
+    public Category addCategory(@RequestBody Category category) {
         try {
             return categoryDao.create(category);
-
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops...Category may not have been added.");
         }
-
-
     }
+
+
 
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
     @RequestMapping(path = "/categories/{categoryId}", method = RequestMethod.PUT)
@@ -113,6 +109,7 @@ public class CategoriesController
     @DeleteMapping("{id}")
     // add annotation to ensure that only an ADMIN can call this function
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable int id)
     {
         // delete the category by id
